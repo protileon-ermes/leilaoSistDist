@@ -60,7 +60,19 @@ def leiloes():
         INNER JOIN usuarios u ON l.usuario_id = u.id
     """).fetchall()
 
-    return render_template('leiloes.html', leiloes=leiloes)
+    leiloes_list = []
+    for leilao in leiloes:
+        leilao_dict = dict(leilao)
+        if leilao_dict['maior_lance']:
+            vencedor = con.execute('SELECT u.email FROM lances l INNER JOIN usuarios u ON l.usuario_id = u.id WHERE l.leilao_id = ? AND l.valor = ?', (leilao_dict['id'], leilao_dict['maior_lance'])).fetchone()
+            leilao_dict['vencedor'] = vencedor['email'] if vencedor else None
+        else:
+            leilao_dict['vencedor'] = None
+        leiloes_list.append(leilao_dict)
+
+    return render_template('leiloes.html', leiloes=leiloes_list)
+
+
 
 @app.get('/cadastro')
 def cadastro():
@@ -88,12 +100,14 @@ def leilao_salvar():
     valor_inicial = request.form['valor_inicial']
     data_inicio = request.form['data_inicio']
     data_fim = request.form['data_fim']
-    usuario_id = session['usuario_id']  
+    usuario_id = session['usuario_id']
+
     con.execute('INSERT INTO leiloes (nome, valor_inicial, data_inicio, data_fim, usuario_id) VALUES (?, ?, ?, ?, ?)', 
                 (nome, valor_inicial, data_inicio, data_fim, usuario_id))
     con.commit()
 
     return redirect(location="/leiloes")
+
 
 @app.get('/criar_lance/<leilao_id>')
 @login_required
