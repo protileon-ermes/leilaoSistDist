@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leiloes</title>
+</head>
+<body>
+    <h1>Leiloes:</h1>
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-error">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <ul>
+        {% for leilao in leiloes %}
+            <li>
+                <h2>{{ leilao.nome }}</h2>
+                <ul>
+                    <li>Valor Inicial: R$ {{ leilao.valor_inicial }}</li>
+                    {% if leilao.maior_lance %}
+                        <li>Lance Atual: R$ {{ leilao.maior_lance }}</li>
+                        <li>Valor Total: R${{ leilao.valor_inicial + leilao.maior_lance}}</li>
+                    {% else %}
+                        <li>Lance Atual: Nenhum</li>
+                    {% endif %}
+                    <li>Inicio: {{ leilao.data_inicio }}</li>
+                    <li>Fim: {{ leilao.data_fim }}</li>
+                    <li>Criado por: {{ leilao.usuario_email }}</li>
+                    <a href="/criar_lance/{{ leilao.id }}">
+                        <button>Dar lance</button>
+                    </a>
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/logout">
+        <button>Deslogar</button>
+    </a>
+</body>
+</html>
