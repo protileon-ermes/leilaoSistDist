@@ -41,7 +41,7 @@ def login_executar():
         session['usuario_id'] = usuario['id']
         return redirect(location="/")
     else:
-        flash('email/senha invalidos!', 'error')
+        flash('senha invalidos!', 'error')
 
     return redirect(location="/")
 
@@ -121,7 +121,6 @@ def lance_salvar():
     valor = request.form['valor']
     leilao_id = request.form['leilao_id']
 
-    # Verificar se a data de fim do leilão é anterior à data atual
     leilao = con.execute('SELECT * FROM leiloes WHERE id = ?', (leilao_id,)).fetchone()
     data_fim = datetime.datetime.strptime(leilao['data_fim'], '%Y-%m-%dT%H:%M')
     if datetime.datetime.now() > data_fim:

@@ -26,7 +26,7 @@
                         <li>Maior Lance: R$ {{ leilao.maior_lance }}</li>
                         <li>Valor Total: R${{ leilao.valor_inicial + leilao.maior_lance}}</li>
                         {% if leilao.vencedor != 0 %}
-                            <li>Vencedor: {{ leilao.vencedor }}</li>
+                            <li>Maior lance por: {{ leilao.vencedor }}</li>
                         {% endif %}
                     {% else %}
                         <li>Lance Atual: Nenhum</li>
